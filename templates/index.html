@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Fila de Atendimento</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Atualização automática da página a cada 10 segundos (Bônus) -->
+    <meta http-equiv="refresh" content="10">
+</head>
+<body>
+    <div class="container">
+        <h1>Sistema de Fila de Atendimento</h1>
+        
+        <div class="nav-links">
+            <a href="{{ url_for('historico') }}">Ver Histórico de Atendimentos</a>
+        </div>
+
+        <!-- Formulário de Cadastro -->
+        <div class="card">
+            <h2>Novo Atendimento</h2>
+            <form action="{{ url_for('adicionar') }}" method="POST">
+                <input type="text" name="nome" placeholder="Nome do Cliente" required>
+                <select name="prioridade">
+                    <option value="Normal">Normal</option>
+                    <option value="Preferencial">Preferencial</option>
+                </select>
+                <button type="submit" class="btn-primary">Cadastrar na Fila</button>
+            </form>
+        </div>
+
+        <!-- Ação de Chamar Próximo -->
+        <div class="actions-bar">
+            <form action="{{ url_for('chamar') }}" method="POST">
+                <button type="submit" class="btn-success">Chamar Próximo da Fila</button>
+            </form>
+        </div>
+
+        <!-- Fila de Espera -->
+        <div class="card">
+            <h2>Fila Atual</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nome</th>
+                        <th>Prioridade</th>
+                        <th>Status</th>
+                        <th>Horário</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in fila %}
+                    <tr class="status-{{ c.status | lower | replace(' ', '-') }}">
+                        <td>{{ c.id }}</td>
+                        <td>{{ c.nome }}</td>
+                        <td><span class="badge {{ c.prioridade | lower }}">{{ c.prioridade }}</span></td>
+                        <td><strong>{{ c.status }}</strong></td>
+                        <td>{{ c.data_criacao }}</td>
+                        <td>
+                            <form action="{{ url_for('alterar_status', id=c.id, novo_status='Cancelado') }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn-danger">Cancelar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" style="text-align: center;">Nenhum cliente na fila no momento.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

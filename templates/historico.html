@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Histórico - Fila de Atendimento</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Histórico de Atendimentos</h1>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">← Voltar para a Fila Atual</a>
+        </div>
+
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nome</th>
+                        <th>Prioridade</th>
+                        <th>Status Final</th>
+                        <th>Horário</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for h in historico %}
+                    <tr>
+                        <td>{{ h.id }}</td>
+                        <td>{{ h.nome }}</td>
+                        <td>{{ h.prioridade }}</td>
+                        <td><strong>{{ h.status }}</strong></td>
+                        <td>{{ h.data_criacao }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" style="text-align: center;">Nenhum registro no histórico.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
